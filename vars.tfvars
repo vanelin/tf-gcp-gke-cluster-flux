@@ -1,0 +1,1 @@
+GOOGLE_PROJECT = "minikube-385711"
