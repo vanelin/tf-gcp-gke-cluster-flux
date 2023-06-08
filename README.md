@@ -1,5 +1,3 @@
-[![infracost](https://img.shields.io/endpoint?url=https://dashboard.api.infracost.io/shields/json/cb47d17f-446d-4a9a-9d83-2819f55066c9/repos/a51f4d3f-031e-4131-8d26-c14214c62c21/branch/d5f1f48d-d27f-4a39-bc49-5c63798969d9/vanelin%252Ftf-gcp-gke-cluster-flux)](https://dashboard.infracost.io/org/vano3231/repos/a51f4d3f-031e-4131-8d26-c14214c62c21)
-
 # Requirements
 
 - [Install the terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform)
@@ -15,29 +13,23 @@ For personal access token (classic), I think the minimum I need for bootstrap to
 | ✅      | `admin:public_key` | Full control of user public keys     |
 |  		    |  		   		         |	    							                  |
 
-- [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install)
-  - `gcloud auth login`
-  - `gcloud auth application-default login`
+- [Install kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installing-with-a-package-manager)
 - Add all sensitive varibles to `vars.tfvars` file, see `vars.tfvars.sample`.
 
-# Infrastructure deployment to GKE
+# Infrastructure deployment to local kind
 1. Edit the `vars.tfvars` file, specifying the necessary values in accordance with the configuration
-2. Create a Google Storage Bucket:
-```bash
-$ gcloud storage buckets create gs://385711-bucket-tfstate --project=<PROJECT_ID> --default-storage-class=STANDARD --location=US --uniform-bucket-level-access
-```
-3. Clone repository
+2. Clone repository
 ``` bash
-$ git clone https://github.com/vanelin/tf-gcp-gke-cluster-flux.git
+$ git clone --branch test/kind --single-branch https://github.com/vanelin/tf-gcp-gke-cluster-flux.git
 $ cd tf-gcp-gke-cluster-flux
 ```
 
-4. Deploy a Kubernetes Cluster + Flux
-  ```bash
- $ terraform init
- $ terraform validate
- $ terraform plan -var-file=vars.tfvars
- $ terraform apply -var-file=vars.tfvars
+3. Deploy a Kubernetes Cluster + Flux
+```bash
+$ terraform init
+$ terraform validate
+$ terraform plan -var-file=vars.tfvars
+$ terraform apply -var-file=vars.tfvars
 
 $ terraform state list
 module.flux_bootstrap.flux_bootstrap_git.this
@@ -50,15 +42,9 @@ module.gke_cluster.google_container_node_pool.this
 module.tls_private_key.tls_private_key.this
 module.gke_cluster.module.gke_auth.data.google_client_config.provider
 module.gke_cluster.module.gke_auth.data.google_container_cluster.gke_cluster
-  ```
-
-5. Fetch credentials for a running cluster.
-```bash
-$ gcloud container clusters get-credentials main --zone ${GOOGLE_REGION} --project ${GOOGLE_PROJECT}
-
 ```
 
-5. Clone the infrastructure repository `flux-gitops`. Example how to use flux:
+4. Clone the infrastructure repository `flux-gitops`. Example how to use flux:
 ```bash
 $ git clone https://github.com/${GITHUB_OWNER}/${FLUX_GITHUB_REPO}
 $ cd ${FLUX_GITHUB_REPO}
@@ -113,7 +99,7 @@ $ flux get all
 $ flux logs
 ```
 
-6. Destroy all infrastructure:
+5. Destroy all infrastructure:
 ```bash
 $ terraform destroy -var-file=vars.tfvars
 ```

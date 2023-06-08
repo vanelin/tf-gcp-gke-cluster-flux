@@ -1,8 +1,7 @@
 # https://www.terraform.io/language/settings/backends/gcs
 terraform {
   backend "gcs" {
-    bucket = "385711-bucket-tfstate"
-    # bucket = "local"
+    bucket = "local"
     prefix = "terraform/state"
   }
 }
@@ -16,12 +15,8 @@ module "github_repository" {
   public_key_openssh_title = "flux"
 }
 
-module "gke_cluster" {
-  source           = "github.com/vanelin/tf-google-gke-cluster?ref=gke_auth"
-  GOOGLE_REGION    = var.GOOGLE_REGION
-  GOOGLE_PROJECT   = var.GOOGLE_PROJECT
-  GKE_NUM_NODES    = var.GKE_NUM_NODES
-  GKE_MACHINE_TYPE = var.GKE_MACHINE_TYPE
+module "kind_cluster" {
+  source = "github.com/den-vasyliev/tf-kind-cluster"
 }
 
 module "flux_bootstrap" {
