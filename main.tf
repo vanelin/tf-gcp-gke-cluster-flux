@@ -7,14 +7,6 @@ terraform {
   }
 }
 
-module "gke_cluster" {
-  source           = "github.com/vanelin/tf-google-gke-cluster?ref=gke_auth"
-  GOOGLE_REGION    = var.GOOGLE_REGION
-  GOOGLE_PROJECT   = var.GOOGLE_PROJECT
-  GKE_NUM_NODES    = var.GKE_NUM_NODES
-  GKE_MACHINE_TYPE = var.GKE_MACHINE_TYPE
-}
-
 module "github_repository" {
   source                   = "github.com/den-vasyliev/tf-github-repository"
   github_owner             = var.GITHUB_OWNER
@@ -22,6 +14,14 @@ module "github_repository" {
   repository_name          = var.FLUX_GITHUB_REPO
   public_key_openssh       = module.tls_private_key.public_key_openssh
   public_key_openssh_title = "flux"
+}
+
+module "gke_cluster" {
+  source           = "github.com/vanelin/tf-google-gke-cluster?ref=gke_auth"
+  GOOGLE_REGION    = var.GOOGLE_REGION
+  GOOGLE_PROJECT   = var.GOOGLE_PROJECT
+  GKE_NUM_NODES    = var.GKE_NUM_NODES
+  GKE_MACHINE_TYPE = var.GKE_MACHINE_TYPE
 }
 
 module "flux_bootstrap" {
