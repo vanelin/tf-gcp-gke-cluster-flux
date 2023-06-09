@@ -1,5 +1,4 @@
 # This is a sample file, please change the values to your own
-
 GOOGLE_PROJECT = "<PROJECT_ID>"
 GITHUB_OWNER   = "<OWNER>"
-GITHUB_TOKEN   = "ghp_12..."
+GITHUB_TOKEN   = "<ghp_12...>"

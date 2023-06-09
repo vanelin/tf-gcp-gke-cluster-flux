@@ -1,5 +1,11 @@
 [![infracost](https://img.shields.io/endpoint?url=https://dashboard.api.infracost.io/shields/json/cb47d17f-446d-4a9a-9d83-2819f55066c9/repos/a51f4d3f-031e-4131-8d26-c14214c62c21/branch/d5f1f48d-d27f-4a39-bc49-5c63798969d9/vanelin%252Ftf-gcp-gke-cluster-flux)](https://dashboard.infracost.io/org/vano3231/repos/a51f4d3f-031e-4131-8d26-c14214c62c21)
 
+# List of modules that have been used:
+- [Terraform Flux Bootstrap Git Module](https://github.com/den-vasyliev/tf-fluxcd-flux-bootstrap/tree/main)
+- [GitHub Repository Terraform Module](https://github.com/den-vasyliev/tf-github-repository)
+- [TLS Private Key Terraform Module](https://github.com/den-vasyliev/tf-hashicorp-tls-keys)
+- [Google Kubernetes Engine (GKE) Cluster Terraform module](https://github.com/vanelin/tf-google-gke-cluster/tree/main)
+
 # Requirements
 
 - [Install the terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform)
@@ -58,13 +64,17 @@ $ gcloud container clusters get-credentials main --zone ${GOOGLE_REGION} --proje
 
 ```
 
-5. Clone the infrastructure repository `flux-gitops`. Example how to use flux:
+6. Clone the infrastructure repository `flux-gitops`.
+#### Example how to use flux:
 ```bash
+# Clone the GitHub repository containing the Flux manifests
 $ git clone https://github.com/${GITHUB_OWNER}/${FLUX_GITHUB_REPO}
-$ cd ${FLUX_GITHUB_REPO}
 
+# Change into the directory for the demo cluster and create a new directory for the namespace
+$ cd ${FLUX_GITHUB_REPO}
 $ mkdir clusters/demo && cd $_
 
+# Create a Kubernetes Namespace for the demo
 $ cat <<EOF > ns.yaml
 apiVersion: v1
 kind: Namespace
@@ -72,6 +82,7 @@ metadata:
   name: demo
 EOF
 
+# Create a GitRepository custom resource for the kbot repository
 $ cat <<EOF > kbot-gr.yaml
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
@@ -86,6 +97,7 @@ spec:
   url: https://github.com/vanelin/kbot
 EOF
 
+# Create a HelmRelease custom resource for the kbot chart
 $ cat <<EOF > kbot-hr.yaml
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -104,16 +116,38 @@ spec:
   interval: 1m0s
 EOF
 
+# Commit the changes and push to the Git repository
 $ git commit -am "Add kbot manifest" && git push
 
-# Get list and status of components
+# Get a list of all the components managed by Flux and their status
 $ flux get all
 
-# Get logs
+# Get flux logs
 $ flux logs
+
+# Manual pass varible TELE_TOKEN to pod
+$ cat <<EOF > secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kbot
+type: Opaque
+data:
+  token: "<YOUR-TOKEN>"
+EOF
+
+$ kubectl apply -f secret.yaml
+
+$ kubectl get po,secrets        
+NAME                        READY   STATUS
+pod/kbot-6bb874fd54-6jwhh   1/1     Running
+
+NAME                                TYPE
+secret/kbot                         Opaque
+secret/sh.helm.release.v1.kbot.v1   helm.sh/release.v1
 ```
 
-6. Destroy all infrastructure:
+7. Destroy all infrastructure:
 ```bash
 $ terraform destroy -var-file=vars.tfvars
 ```
