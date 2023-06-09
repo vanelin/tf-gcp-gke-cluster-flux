@@ -1,11 +1,3 @@
-# https://www.terraform.io/language/settings/backends/gcs
-terraform {
-  backend "gcs" {
-    bucket = "local"
-    prefix = "terraform/state"
-  }
-}
-
 module "github_repository" {
   source                   = "github.com/den-vasyliev/tf-github-repository"
   github_owner             = var.GITHUB_OWNER
