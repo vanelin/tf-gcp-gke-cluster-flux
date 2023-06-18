@@ -9,6 +9,7 @@ locals {
     # MUST-HAVE for Secret Manager setup
     "secretmanager.googleapis.com", # Secret Manager API
     "pubsub.googleapis.com",        # Cloud Pub/Sub API
+    "cloudkms.googleapis.com",      #Cloud Key Management Service (KMS) API
     # You can add more apis to enable in the project
   ])
 }
