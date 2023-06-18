@@ -6,6 +6,9 @@ locals {
     "cloudresourcemanager.googleapis.com", # Cloud Resource Manager API
     "sts.googleapis.com",                  # Security Token Service API
 
+    # MUST-HAVE for Secret Manager setup
+    "secretmanager.googleapis.com", # Secret Manager API
+    "pubsub.googleapis.com",        # Cloud Pub/Sub API
     # You can add more apis to enable in the project
   ])
 }

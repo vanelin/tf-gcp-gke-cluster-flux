@@ -5,6 +5,7 @@
 - [GitHub Repository Terraform Module](https://github.com/den-vasyliev/tf-github-repository)
 - [TLS Private Key Terraform Module](https://github.com/den-vasyliev/tf-hashicorp-tls-keys)
 - [Google Kubernetes Engine (GKE) Cluster Terraform module](https://github.com/vanelin/tf-google-gke-cluster/tree/main)
+- [Google Secret Manager for Terraform](https://github.com/GoogleCloudPlatform/terraform-google-secret-manager)
 
 # Requirements
 

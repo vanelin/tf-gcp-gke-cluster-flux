@@ -2,3 +2,4 @@
 GOOGLE_PROJECT = "<PROJECT_ID>"
 GITHUB_OWNER   = "<OWNER>"
 GITHUB_TOKEN   = "<ghp_12...>"
+SECRET_DATA    = "<telegram_token>"
