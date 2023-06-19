@@ -1,10 +1,23 @@
-module "github_repository" {
-  source                   = "github.com/den-vasyliev/tf-github-repository"
-  github_owner             = var.GITHUB_OWNER
-  github_token             = var.GITHUB_TOKEN
-  repository_name          = var.FLUX_GITHUB_REPO
-  public_key_openssh       = module.tls_private_key.public_key_openssh
-  public_key_openssh_title = "flux"
+# # Use if you want crate new GitHub repository for Flux
+# module "github_repository" {
+#   source                   = "github.com/den-vasyliev/tf-github-repository"
+#   github_owner             = var.GITHUB_OWNER
+#   github_token             = var.GITHUB_TOKEN
+#   repository_name          = var.FLUX_GITHUB_REPO
+#   public_key_openssh       = module.tls_private_key.public_key_openssh
+#   public_key_openssh_title = "flux"
+# }
+
+# Use if you want to use already existing GitHub repository for Flux
+resource "github_repository_deploy_key" "deploy_key" {
+  title      = "flux"
+  repository = var.FLUX_GITHUB_REPO
+  key        = module.tls_private_key.public_key_openssh
+  read_only  = false
+}
+
+module "tls_private_key" {
+  source = "github.com/den-vasyliev/tf-hashicorp-tls-keys"
 }
 
 module "gke_cluster" {
@@ -25,10 +38,6 @@ module "flux_bootstrap" {
   config_ca         = module.gke_cluster.config_ca
 }
 
-module "tls_private_key" {
-  source = "github.com/den-vasyliev/tf-hashicorp-tls-keys"
-}
-
 module "gke-workload-identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   name                = "kustomize-controller"
@@ -45,7 +54,7 @@ module "kms" {
   source          = "github.com/den-vasyliev/terraform-google-kms"
   project_id      = var.GOOGLE_PROJECT
   location        = "global"
-  keyring         = "sops-flux"
-  keys            = ["sops-key-flux"]
+  keyring         = "sops-flux-1"
+  keys            = ["sops-key-flux-1"]
   prevent_destroy = false
 }

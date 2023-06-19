@@ -43,15 +43,3 @@ variable "FLUX_GITHUB_TARGET_PATH" {
   default     = "clusters"
   description = "Flux manifests subdirectory"
 }
-
-variable "SECRET_DATA" {
-  type        = string
-  description = "Secret token for TELE_TOKEN"
-  sensitive   = true
-}
-
-variable "SECRET_NAME" {
-  type        = string
-  default     = "TELE_TOKEN"
-  description = "Secret name"
-}
