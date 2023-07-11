@@ -29,6 +29,9 @@ For personal access token (classic), I think the minimum I need for bootstrap to
 - Add all sensitive varibles to `vars.tfvars` file, see `vars.tfvars.sample`.
 
 # Infrastructure deployment to GKE
+
+![GitOps](images/GitOps.png)
+
 1. Edit the `vars.tfvars` file, specifying the necessary values in accordance with the configuration
 2. Create a Google Storage Bucket:
 ```bash
